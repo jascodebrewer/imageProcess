@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Product Description</title>
+    <!-- Add custom styles -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h2 {
+        color: #1abc9c;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+
+    button {
+        display: block;
+        margin: 30px auto 0;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0062cc;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Product Description</h2>
+        <p>{{ description }}</p>
+        <button onclick="goBack()">Back to Home</button>
+    </div>
+    <script>
+        function goBack() {
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>

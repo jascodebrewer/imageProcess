@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Similarity Measure Result</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #1abc9c;
+        }
+        h1 {
+            margin-top: 50px;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+        img {
+            display: block;
+            margin: 0 auto;
+            border: 2px solid #1abc9c;
+            padding: 5px;
+            max-width: 100%;
+            height: auto;
+        }
+        button {
+            display: block;
+            margin: 30px auto;
+            background-color: #1abc9c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-items: center;
+        }
+        button:hover {
+            background-color: #1abc9c;    }
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 50px;
+    }
+    .col-md-4 {
+        flex: 0 0 auto;
+        width: 33.33333%;
+        max-width: 33.33333%;
+        padding: 0 15px;
+    }
+    .col-md-4 img {
+        margin-bottom: 20px;
+    }
+    .col-md-4 h3 {
+        font-size: 18px;
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .col-md-4 h3:last-child {
+        font-size: 14px;
+        font-weight: normal;
+    }
+</style>
+</head>
+<body>
+    <h1>Similarity Measure Result</h1>
+    <h2>The uploaded image and top 5 similar images:</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{ filepath_input }}" alt="Input Image">
+            <h3>Input Image</h3>
+        </div>
+        {% for similarity in top5_similarities %}
+        <div class="col-md-4">
+            <img src="{{ similarity[2] }}" alt="Result Image">
+            <h3>Filename: {{ similarity[1] }}</h3>
+            <h3>Similarity Score: {{ similarity[0] }}%</h3>
+        </div>
+        {% endfor %}
+    </div>
+    <button onclick="window.location.href = '/';">Back to Home</button>
+    <!-- Add Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

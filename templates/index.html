@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Image Manipulation</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+
+		.container {
+			width: 80%;
+			margin: 0 auto;
+			padding: 20px;
+		}
+
+		.header {
+			background-color: #1abc9c;
+			color: #fff;
+			padding: 20px;
+			text-align: center;
+		}
+
+		.section {
+			margin-top: 50px;
+		}
+
+		h2 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		.form {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			border: 1px solid #ccc;
+			padding: 20px;
+			border-radius: 10px;
+			background-color: #f5f5f5;
+			margin-top: 30px;
+		}
+
+		input[type="file"] {
+			margin-bottom: 20px;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			background-color: #fff;
+			box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+		}
+
+		input[type="submit"] {
+			background-color: #1abc9c;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+		input[type="submit"]:hover {
+			background-color: #16a085;
+		}
+
+		.small-text {
+			font-size: 12px;
+			margin-top: 5px;
+		}
+
+		.submit-btn {
+			background-color: #1abc9c;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+			margin-top: 20px;
+		}
+
+		.submit-btn:hover {
+			background-color: #16a085;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<header class="header">
+			<h1>Image Manipulation</h1>
+		</header>
+
+		<section class="section">
+			<h2>Remove Background</h2>
+			<form class="form" action="/upload" method="post" enctype="multipart/form-data" onsubmit="return validateForm(this)">
+				<input type="file" name="image">
+				<input type="submit" value="Remove Background">
+			</form>
+		</section>
+
+		<section class="section">
+			<h2>Blur Detection</h2>
+			<form class="form" action="/blur_detection" method="post" enctype="multipart/form-data" onsubmit="return validateForm(this)">
+				<input type="file" name="image">
+				<input type="submit" value="Detect Blur">
+			</form>
+		</section>
+
+		<section class="section">
+			<h2>Similarity Measure</h2>
+			<form class="form" action="/similarity_measure" method="post" enctype="multipart/form-data" onsubmit="return validateForm(this)">
+				<input type="file" name="image">
+				<input type="submit" value="Measure">
+			</form>
+		</section>
+        <section class="section">
+                <h2>Product Description Generator</h2>
+                <form class="form" action="/generate_description" method="post" onsubmit="return validateForm2()">
+                <h2>Enter keywords for your product:</h2>
+                <input id="keywords-input" class="input" type="text" name="keywords" size="50" onclick="showAlert()">
+                <p class="small-text"><i>Use quotes for multi-word keyword e.g. 'image processing'</i></p>
+                <input class="submit-btn" type="submit" value="Generate Description">
+            </form>
+        </section>
+    </div>
+    <script>
+                function showAlert() {
+                alert("Please use commas to separate keywords.");
+                document.getElementById("keywords-input").removeAttribute("onclick");
+                }
+		function validateForm2() {
+		  var keywordsInput = document.getElementById("keywords-input");
+		  var keywords = keywordsInput.value.trim();
+		  if (keywords == "") {
+			alert("You must write keywords to generate description");
+			return false;
+		  }
+		  return true;
+		}
+		function validateForm(form) {
+    var fileInput = form.querySelector('input[type="file"]');
+    if (fileInput.files.length === 0) {
+        alert("Please choose a file");
+        return false;
+    }
+    return true;}
+		</script>
+                
+    </body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Background</title>
+    <style>
+         form {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+    
+        h1 {
+		text-align: center;
+		margin-top: 20px;
+		color: #1abc9c;
+		text-transform: capitalize;
+	}
+    #image-container {
+        display: block;
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      #image-container img {
+        max-width: 100%;
+        height: auto;
+      }
+        label {
+            margin-right: 10px;
+        }
+        input[type="radio"] {
+            margin: 10px;
+        }
+        
+       #submit {
+            background-color: #1abc9c;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        #submit:hover {
+            background-color: #afe4d9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Do you want to change the background?</h1>
+    <form action="/change_background/{{ filename }}" method="post">
+        <div id="image-container">
+            <img src="{{ url_for('send_file', filename=filename) }}" alt="Image">
+        </div>
+        <label for="change-background-yes">Yes</label>
+        <input type="radio" id="change-background-yes" name="choice" value="yes">
+        <br>
+        <label for="change-background-no">No</label>
+        <input type="radio" id="change-background-no" name="choice" value="no">
+        <br>
+        <input type="submit" id="submit" value="Submit" disabled>
+</form>
+
+<script>
+  // Get the radio buttons and submit button
+  const yesRadio = document.getElementById('change-background-yes');
+  const noRadio = document.getElementById('change-background-no');
+  const submitButton = document.getElementById('submit');
+
+  // Add event listeners to the radio buttons
+  yesRadio.addEventListener('change', enableSubmitButton);
+  noRadio.addEventListener('change', enableSubmitButton);
+
+  // Define the function to enable/disable the submit button
+  function enableSubmitButton() {
+    if (yesRadio.checked || noRadio.checked) {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
+  }
+</script>
+</body>
+</html> 

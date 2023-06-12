@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <style>
+        h1 {
+		text-align: center;
+		margin-top: 20px;
+		color: #1abc9c;
+		text-transform: capitalize;
+        margin-bottom: 20px;
+	}
+        #image-container {
+        display: block;
+        position: relative;
+       
+      }
+     
+      img {
+            display: block;
+            margin: 0 auto;
+            border: 2px solid #1abc9c;
+            padding: 5px;
+            max-width: 100%;
+            height: auto;
+        }
+        .custom-btn{
+            background-color: #1abc9c; /* Change this to the desired color */
+}
+.custom-btn:hover {
+            background-color: #afe4d9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Final Image</h1>
+    <div id="image-container">
+    <img src="{{ url_for('send_file', filename=filename) }}">
+    </div>
+    <br>
+    <div class="container mt-3 text-center">
+        <a href="{{ url_for('index') }}" class="btn btn-primary custom-btn"><i class="bi bi-house"></i> Back to Home</a>
+      </div>
+      
+</body>
+</html>

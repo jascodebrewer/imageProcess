@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Select Region of Interest</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      h1 {
+            text-align: center;
+            color: #1abc9c;
+            margin-top: 50px;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: capitalize;
+            letter-spacing: 1px;
+        }
+        p {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+       
+        #image-container {
+        display: inline-block;
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      #image-container img {
+        max-width: 100%;
+        height: auto;
+      }
+      #selection-box {
+        display: none;
+        position: absolute;
+        border: 2px dashed red;
+        background-color: rgba(255, 255, 255, 0.5);
+        cursor: crosshair;
+      }
+      #selection-box.active {
+        display: block;
+      }
+      #instructions {
+        margin-bottom: 20px;
+      }
+    
+      form {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+      
+      #submit-button,
+      #reset-button {
+        display: inline-block;
+        margin: 0 auto;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #1abc9c;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+      #submit-button:hover,
+      #reset-button:hover {
+        background-color: #1abc9c;
+      }
+
+      #submit-button:disabled,
+      #reset-button:disabled {
+        background-color: #ccc;
+        color: #666;
+        cursor: default;
+      }
+
+      #error-message {
+        color: #f00;
+        margin: 10px 0;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Select Region of Interest</h1>
+    <p id="instructions">Click and drag on the image to select the region of interest. Please ensure that the entire object and some of its surrounding area are covered for optimal results. 
+    <br>  Once you are satisfied with your selection, click the submit button.</p>
+    <div id="image-container">
+      <img src="{{ url_for('send_file', filename=filename) }}" alt="Original image">
+      <div id="selection-box"></div>
+    </div>
+    <form action="{{ url_for('process_roi', filename=filename) }}" method="post" onsubmit="return validateForm()">
+      <input type="hidden" name="x" id="x">
+      <input type="hidden" name="y" id="y">
+      <input type="hidden" name="width" id="width">
+      <input type="hidden" name="height" id="height">
+      <button type="submit" id="submit-button" disabled>Submit</button>
+      <button type="button" id="reset-button" onclick="resetSelection()">Reset</button>
+      <div id="error-message"></div>
+    </form>
+    <script>
+      var image = document.querySelector('#image-container img');
+var selectionBox = document.querySelector('#selection-box');
+var startX, startY, endX, endY;
+var submitButton = document.querySelector('#submit-button');
+var resetButton = document.querySelector('#reset-button');
+var errorMessage = document.querySelector('#error-message');
+var imageRect; // Define imageRect as a global variable
+
+function handleMouseDown(event) {
+  imageRect = image.getBoundingClientRect();
+  startX = event.clientX - imageRect.left;
+  startY = event.clientY - imageRect.top;
+  document.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('mouseup', handleMouseUp);
+  selectionBox.classList.remove('active');
+}
+
+function handleMouseMove(event) {
+  endX = event.clientX - image.getBoundingClientRect().left;
+  endY = event.clientY - image.getBoundingClientRect().top;
+  var diffX = Math.abs(endX - startX);
+  var diffY = Math.abs(endY - startY);
+  var selectionBoxX = Math.min(Math.round(startX), Math.round(endX));
+var selectionBoxY = Math.min(Math.round(startY), Math.round(endY));
+
+  var selectionBoxWidth = Math.round(diffX);
+var selectionBoxHeight = Math.round(diffY);
+
+  if (selectionBoxX < 0) {
+    selectionBoxWidth += selectionBoxX;
+    selectionBoxX = 0;
+  }
+  if (selectionBoxY < 0) {
+    selectionBoxHeight += selectionBoxY;
+    selectionBoxY = 0;
+  }
+  if (selectionBoxX + selectionBoxWidth > imageRect.width) {
+    selectionBoxWidth = imageRect.width - selectionBoxX;
+  }
+  if (selectionBoxY + selectionBoxHeight > imageRect.height) {
+    selectionBoxHeight = imageRect.height - selectionBoxY;
+  }
+  selectionBox.style.left = selectionBoxX + 'px';
+  selectionBox.style.top = selectionBoxY + 'px';
+  selectionBox.style.width = selectionBoxWidth + 'px';
+  selectionBox.style.height = selectionBoxHeight + 'px';
+  selectionBox.classList.add('active');
+  document.getElementById('x').value = selectionBoxX;
+  document.getElementById('y').value = selectionBoxY;
+  document.getElementById('width').value = selectionBoxWidth;
+  document.getElementById('height').value = selectionBoxHeight;
+  submitButton.disabled = true;
+  if (diffX > 0 && diffY > 0) {
+    submitButton.disabled = false;
+  }
+}
+
+function handleMouseUp(event) {
+  document.removeEventListener('mousemove', handleMouseMove);
+  document.removeEventListener('mouseup', handleMouseUp);
+  var selectionBoxX = parseInt(selectionBox.style.left);
+  var selectionBoxY = parseInt(selectionBox.style.top);
+  var selectionBoxWidth = parseInt(selectionBox.style.width);
+  var selectionBoxHeight = parseInt(selectionBox.style.height);
+  var originalWidth = image.naturalWidth;
+  var originalHeight = image.naturalHeight;
+  var scaleX = originalWidth / image.offsetWidth;
+  var scaleY = originalHeight / image.offsetHeight;
+  var finalX = Math.round(selectionBoxX * scaleX);
+  var finalY = Math.round(selectionBoxY * scaleY);
+  var finalWidth = Math.round(selectionBoxWidth * scaleX);
+  var finalHeight = Math.round(selectionBoxHeight * scaleY);
+  document.getElementById('x').value = finalX;
+  document.getElementById('y').value = finalY;
+  document.getElementById('width').value = finalWidth;
+  document.getElementById('height').value = finalHeight;
+  selectionBox.classList.add('active');
+}
+
+
+function resetSelection() {
+  document.removeEventListener('click', resetSelection);
+  selectionBox.style.left = '';
+  selectionBox.style.top = '';
+  selectionBox.style.width = '';
+  selectionBox.style.height = '';
+  selectionBox.classList.remove('active');
+  document.getElementById('x').value = '';
+  document.getElementById('y').value = '';
+  document.getElementById('width').value = '';
+  document.getElementById('height').value = '';
+}
+
+
+image.addEventListener('mousedown', handleMouseDown);
+
+resetButton.addEventListener('click', resetSelection);
+
+
+</script>
+</body></html>
